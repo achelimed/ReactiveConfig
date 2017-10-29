@@ -2,14 +2,14 @@ package com.github.achelimed.reactiveconfig.actors
 
 import java.nio.file.{NoSuchFileException, Path, Paths}
 
-import akka.actor.{Actor, ActorLogging, ActorSelection, Props}
+import akka.actor.{Actor, ActorLogging, ActorRef, ActorSelection, Props}
 import com.github.achelimed.reactiveconfig.InitialConfig
 import com.github.achelimed.reactiveconfig.actors.ConfigReloader.Reload
 
 /**
   * File-Watcher actor
   */
-class FileWatcher extends Actor with ActorLogging {
+class FileWatcher(subscriber: ActorRef) extends Actor with ActorLogging {
 
   import FileWatcher._
 
@@ -20,8 +20,6 @@ class FileWatcher extends Actor with ActorLogging {
   log.info("A FileWatcher is created to watch: {}", fileToWatch)
   var lastUpdateTime: Long = fileToWatch.underlying.lastModified()
 
-  val configReloaderSelection: ActorSelection = context.system.actorSelection("*/config-reloader-supervisor/config-reloader")
-
   def receive: Receive = {
     case message: FileWatcherMessage => message match {
       case Check =>
@@ -29,9 +27,9 @@ class FileWatcher extends Actor with ActorLogging {
         val lastModified = fileToWatch.underlying.lastModified()
         if (lastModified > lastUpdateTime) {
           lastUpdateTime = lastModified
-          log.debug("File has been modified -> Sending 'Reload' message to {}", configReloaderSelection)
+          log.debug("File has been modified -> Sending 'Reload' message to {}", subscriber)
           log.info("File has been modified: {}", fileToWatch)
-          configReloaderSelection ! Reload
+          subscriber ! Reload
         }
     }
   }
@@ -40,7 +38,7 @@ class FileWatcher extends Actor with ActorLogging {
 
 object FileWatcher extends InitialConfig {
   // Props
-  def props: Props = Props[FileWatcher]
+  def props(subscriber: ActorRef): Props = Props(new FileWatcher(subscriber))
 
   //
   val FilePathPropKey = "reactive-config.file-watcher.path"

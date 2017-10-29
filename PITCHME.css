@@ -1,0 +1,18 @@
+.reveal section img {
+    border: 0;
+    box-shadow: none;
+}
+
+.reveal pre code {
+    font-size: 1.0em;
+    line-height: 1.2;
+}
+
+.reveal pre {
+    width: 120%;
+    margin-left: -10%;
+}
+
+.reveal .backgrounds {
+    margin-top: 260px;
+}
