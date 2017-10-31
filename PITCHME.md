@@ -49,6 +49,10 @@ Note:
 Si le fichier de configuration est modifié -> Une configuration fraîche est chargée sans avoir à redémarrer l'application.
 
 ---
+
+![ReactiveConfig](reactive-config.png)
+
+---
 **sbt dependencies**
 
 ```
@@ -56,20 +60,15 @@ libraryDependencies += "com.github.achelimed" %% "reactive-config" % "1.0.0"
 ```
 
 ```
-    import com.github.achelimed.reactiveconfig.ReactiveConfig
-    import com.github.achelimed.reactiveconfig.utils.implicits.FutureDefaultValues._
-    import scala.concurrent.ExecutionContext
-    
-    class Foo(reactiveConfig: ReactiveConfig)(implicit executionContext: ExecutionContext) {
-        val value: Future[String] = reactiveConfig.getString("key") orDefault "this_is_a_default_value"
-    
-        value foreach println
-    }
-```
- 
+class Foo(reactiveConfig: ReactiveConfig)(implicit executionContext: ExecutionContext) {
 
-Note:
-notes slide 2
+    import com.github.achelimed.reactiveconfig.utils.implicits.FutureDefaultValues._
+    
+    val value: Future[String] = reactiveConfig.getString("key") orDefault "this_is_a_default_value"
+    
+    value foreach println
+}
+```
 
 ---?code=src/main/scala/com/github/achelimed/reactiveconfig/actors/FileWatcher.scala
 @[12](file watcher actor definition)
