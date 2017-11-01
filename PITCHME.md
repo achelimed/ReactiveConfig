@@ -3,7 +3,7 @@
 ---?image=assets/scalaio-sponsors.jpg
 
 ---
-# Typesafe Config
+#### Typesafe Config
 
 A type-safe configuration library for JVM languages.
 
@@ -22,7 +22,7 @@ Note:
 
 +++
 
-# Pros
+#### Pros
 - supports files in three formats: Java properties, JSON, and a human-friendly JSON superset (called HOCON)
 - merges multiple files across all formats
 - can load from files, URLs, or classpath
@@ -33,13 +33,13 @@ Note:
 - Files use the suffix .conf
 +++ 
 
-# Cons
+#### Cons
 - config not hot reloadable
 - Java types (for Scala projects)
 - maybe others
 
 ---
-# Reactive Config
+#### Reactive Config
 - A Reactive Wrapper over the Typesafe Config library that allows to get the latest refreshed configuration. 
 - This library takes advantage of reactive solutions such as Akka actor. 
 
@@ -61,12 +61,13 @@ Si le fichier de configuration est modifié -> Une configuration fraîche est ch
 @[20-32](behavior)
 
 ---
-# sbt dependencies
+###### sbt dependencies
 
-```
+```sbt
 libraryDependencies += "com.github.achelimed" %% "reactive-config" % "1.0.0"
 ```
 
+###### How to use it?
 ```
 class Foo(reactiveConfig: ReactiveConfig)(implicit executionContext: ExecutionContext) {
 
@@ -79,8 +80,8 @@ class Foo(reactiveConfig: ReactiveConfig)(implicit executionContext: ExecutionCo
 ```
 
 ---
-> Your question is a `val`... My response is a `var`.
-> - Me. 2017
+
+_Your question is a **`val`**... My response is a **`var`** - Me. 2017_ 
 
 ---?image=assets/scalaio-thanks.jpg
 
