@@ -48,7 +48,7 @@ Si le fichier de configuration est modifié -> Une configuration fraîche est ch
 
 ---
 
-![ReactiveConfig](assets/reactive-config.png)
+![ReactiveConfig](assets/reactive-config-architecture.png)
 
 ---?code=src/main/scala/com/github/achelimed/reactiveconfig/actors/FileWatcher.scala
 @[12](FileWatcher actor definition)
@@ -60,7 +60,7 @@ Si le fichier de configuration est modifié -> Une configuration fraîche est ch
 @[13](ConfigReloader state)
 @[20-32](ConfigReloader behavior)
 
-+++?code=src/main/scala/com/github/achelimed/reactiveconfig/ReactiveConfig.scala
+---?code=src/main/scala/com/github/achelimed/reactiveconfig/ReactiveConfig.scala
 @[20](Initial Config when starting (can not be changed))
 @[22](Initial config)
 @[36](The Reactive Config interface that wrap Typesafe Config)
@@ -72,7 +72,8 @@ Si le fichier de configuration est modifié -> Une configuration fraîche est ch
 @[172](getString method)
 
 ---
-###### sbt dependencies
+#### Devs
+###### How to get it?
 
 ```
 libraryDependencies += "com.github.achelimed" %% "reactive-config" % "1.0.0"
@@ -90,7 +91,7 @@ class Foo(reactiveConfig: ReactiveConfig)(implicit executionContext: ExecutionCo
 }
 ```
 +++
-###### Static values
+###### Static values?
 
 If you are constrained to deal without Futures, You can get the values from the initial config loaded when the application first started
 
@@ -100,7 +101,7 @@ If you are constrained to deal without Futures, You can get the values from the 
 
 +++
 
-###### With Playframework
+###### With Playframework?
 
 ```
 @Singleton
@@ -124,8 +125,9 @@ class AsyncController @Inject()(cc: ControllerComponents,
 ```
 ---
 #### OPS
+###### Alternatives to default `application.conf`
 
-If you want to reload the config from another file, use system properties as follows (as allowed by the Typesafe Config library).
+If you want to reload the config from another file, use system properties (as allowed by the Typesafe Config library):
 
 ```bash
     -Dconfig.resource="another-file"
@@ -137,9 +139,10 @@ or
 
 +++
 #### OPS
+###### Config for `ReactiveConfig`
 
 application.conf:
-```json
+```properties
 reactive-config {
     file-watcher {
         path = "whatever/you/want/watch.me"
@@ -150,11 +153,19 @@ or
 ```bash
     -Dreactive-config.file-watcher.path="whatever/you/want/watch.me"
 ```
-and you have to touch this file or apply the reactiveConfig.reload() method.
+and you have to touch this file or apply the `reactiveConfig.reload()` method.
+
+---
+#### Upcoming Features
+- [ ] Tests! lol
+- [ ] Java compatibility
+- [ ] Json rendering
+- [ ] REST api
 
 ---
 
-_Your question is a **`val (not null)`**... My response is a **`var (nullable)`**_ 
+_Your question is a **`val (not null)`**..._
+_My response is a **`var (nullable)`**_ 
 
 ---?image=assets/scalaio-thanks.jpg
 
