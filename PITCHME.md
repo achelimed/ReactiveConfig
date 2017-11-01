@@ -36,7 +36,7 @@ Note:
 #### Cons
 - config not hot reloadable
 - Java types (for Scala projects)
-- maybe others
+- maybe others...
 
 ---
 #### Reactive Config
@@ -48,22 +48,33 @@ Si le fichier de configuration est modifié -> Une configuration fraîche est ch
 
 ---
 
-![ReactiveConfig](reactive-config.png)
+![ReactiveConfig](assets/reactive-config.png)
 
 ---?code=src/main/scala/com/github/achelimed/reactiveconfig/actors/FileWatcher.scala
-@[12](actor definition)
-@[21](state)
-@[23-35](behavior)
+@[12](FileWatcher actor definition)
+@[21](FileWatcher state)
+@[23-35](FileWatcher behavior)
 
 +++?code=src/main/scala/com/github/achelimed/reactiveconfig/actors/ConfigReloader.scala
-@[9](actor definition)
-@[13](state)
-@[20-32](behavior)
+@[9](ConfigReloader actor definition)
+@[13](ConfigReloader state)
+@[20-32](ConfigReloader behavior)
+
++++?code=src/main/scala/com/github/achelimed/reactiveconfig/ReactiveConfig.scala
+@[20](Initial Config when starting (can not be changed))
+@[22](Initial config)
+@[36](The Reactive Config interface that wrap Typesafe Config)
+@[43](Supplying an execution context)
+@[46-49](Actor system)
+@[52-53](Create 2 supervisors, one for each actor)
+@[56-58](Schedules to send the "Check" message to the FileWatcher)
+@[72](Get current config from the last reload)
+@[172](getString method)
 
 ---
 ###### sbt dependencies
 
-```sbt
+```
 libraryDependencies += "com.github.achelimed" %% "reactive-config" % "1.0.0"
 ```
 
@@ -78,10 +89,72 @@ class Foo(reactiveConfig: ReactiveConfig)(implicit executionContext: ExecutionCo
     value foreach println
 }
 ```
++++
+###### Static values
+
+If you are constrained to deal without Futures, You can get the values from the initial config loaded when the application first started
+
+```
+    val value: String = Try { reactiveConfig.Initial.getString("key") } getOrElse "default-value"
+```
+
++++
+
+###### With Playframework
+
+```
+@Singleton
+class ReactiveConfigImpl @Inject() (implicit exec: ExecutionContext) extends ReactiveConfig {
+  override implicit def executionContext: ExecutionContext = exec
+}
+
+@Singleton
+class AsyncController @Inject()(cc: ControllerComponents,
+                                actorSystem: ActorSystem,
+                                reactiveConfig: ReactiveConfigImpl)
+                               (implicit exec: ExecutionContext) extends AbstractController(cc) {
+
+  def message = Action.async {
+    for {
+        url <- reactiveConfig.getString("app.cms.url")
+        content <- call cms...
+    } yield Ok(content)
+  }
+}
+```
+---
+#### OPS
+
+If you want to reload the config from another file, use system properties as follows (as allowed by the Typesafe Config library).
+
+```bash
+    -Dconfig.resource="another-file"
+```
+or
+```bash
+    -Dconfig.file="whatever/you/want/another-file.conf"
+```
+
++++
+#### OPS
+
+application.conf:
+```json
+reactive-config {
+    file-watcher {
+        path = "whatever/you/want/watch.me"
+    }
+}
+```
+or
+```bash
+    -Dreactive-config.file-watcher.path="whatever/you/want/watch.me"
+```
+and you have to touch this file or apply the reactiveConfig.reload() method.
 
 ---
 
-_Your question is a **`val`**... My response is a **`var`** - Me. 2017_ 
+_Your question is a **`val (not null)`**... My response is a **`var (nullable)`**_ 
 
 ---?image=assets/scalaio-thanks.jpg
 

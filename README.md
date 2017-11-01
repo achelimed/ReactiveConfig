@@ -5,7 +5,7 @@ automatically without having to restart the application. This library takes adva
 ![tsc-workflow](tsc-workflow.png)
 
 ### Reactive Config Architecture
-![reactive-config](reactive-config.png)
+![reactive-config](assets/reactive-config.png)
 
 ### Binary Releases
 

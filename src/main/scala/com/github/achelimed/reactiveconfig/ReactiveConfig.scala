@@ -43,7 +43,10 @@ trait ReactiveConfig extends InitialConfig {
   implicit def executionContext: ExecutionContext
 
   // Actor system
-  private[reactiveconfig] val actorSystem = ActorSystem(name = "reactive-config-app", defaultExecutionContext = Some(executionContext))
+  private[reactiveconfig] val actorSystem = ActorSystem(
+    name = "reactive-config-app",
+    defaultExecutionContext = Some(executionContext)
+  )
 
   // Create 2 supervisors, one for each actor
   private val configReloaderSupervisor = actorSystem.actorOf(ConfigReloaderSupervisor.props, ConfigReloaderSupervisor.name)
