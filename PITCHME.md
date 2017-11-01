@@ -2,6 +2,13 @@
 
 ---?image=assets/scalaio-sponsors.jpg
 
+<h1 class="name ng-binding">Mohamed ACHELIF
+    <span class="details">
+        <a href="http://twitter.com/@achelimed" class=""><i class="fa fa-twitter"></i></a>
+        <span class="company ng-binding"> - PriceMinister</span>
+    </span>
+</h1>
+        
 ---
 **Typesafe**
 
