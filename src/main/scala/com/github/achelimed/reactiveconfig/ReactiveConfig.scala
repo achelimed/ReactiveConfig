@@ -1,6 +1,6 @@
 package com.github.achelimed.reactiveconfig
 
-import akka.actor.{ActorSelection, ActorSystem}
+import akka.actor.ActorSystem
 import akka.pattern.ask
 import akka.util.Timeout
 import com.github.achelimed.reactiveconfig.actors.ConfigReloader.{GetCurrentConfig, Reload}
@@ -14,7 +14,6 @@ import scala.concurrent.duration.{Duration, TimeUnit}
 import scala.concurrent.{ExecutionContext, Future}
 import scala.language.{implicitConversions, postfixOps}
 
-// scalastyle:off
 /**
   * Initial Config when starting (can not be changed)
   */
@@ -33,6 +32,7 @@ trait InitialConfig {
   * In application, create one instance of this trait by supplying an execution context and pass it to all
   * classes that want to get properties from configuration
   */
+// scalastyle:off number.of.methods
 trait ReactiveConfig extends InitialConfig {
 
   /**
@@ -43,38 +43,30 @@ trait ReactiveConfig extends InitialConfig {
   implicit def executionContext: ExecutionContext
 
   // Actor system
-  private[reactiveconfig] val reactiveConfigActorSystem = ActorSystem(
-    name = "reactive-config-app",
-    defaultExecutionContext = Some(executionContext)
-  )
+  private[reactiveconfig] val actorSystem = ActorSystem(name = "reactive-config-app", defaultExecutionContext = Some(executionContext))
 
-  // create 2 supervisors, one for each actor
-  reactiveConfigActorSystem.actorOf(ConfigReloaderSupervisor.props, "config-reloader-supervisor")
-  reactiveConfigActorSystem.actorOf(FileWatcherSupervisor.props, "file-watcher-supervisor")
-
-  private[reactiveconfig] val ConfigReloaderSelection: ActorSelection = reactiveConfigActorSystem
-    .actorSelection("*/config-reloader-supervisor/config-reloader")
-  private[reactiveconfig] val FileWatcherSelection: ActorSelection = reactiveConfigActorSystem
-    .actorSelection("*/file-watcher-supervisor/file-watcher")
+  // Create 2 supervisors, one for each actor
+  private val configReloaderSupervisor = actorSystem.actorOf(ConfigReloaderSupervisor.props, ConfigReloaderSupervisor.name)
+  private val fileWatcherSupervisor = actorSystem.actorOf(FileWatcherSupervisor.props(configReloaderSupervisor), FileWatcherSupervisor.name)
 
   // Schedules to send the "Check" message to the FileWatcher actor after "fileWatcherInitialDelay" and every "fileWatcherInterval"
-  reactiveConfigActorSystem.scheduler.schedule(fileWatcherInitialDelay, fileWatcherInterval) {
-    FileWatcherSelection ! Check
+  actorSystem.scheduler.schedule(fileWatcherInitialDelay, fileWatcherInterval) {
+    fileWatcherSupervisor ! Check
   }
 
-  // for current method
-  private lazy val AskTimeout = new Timeout(Initial.getDuration("reactive-config.get-current-config-timeout").asScala)
+  // For current method
+  private val askTimeout = new Timeout(Initial.getDuration("reactive-config.get-current-config-timeout").asScala)
 
   /**
     * Force to reload the config from source.
     * Should be used only when necessary, for example by infra ops when they update properties.
     */
-  def reload(): Unit = ConfigReloaderSelection ! Reload
+  def reload(): Unit = configReloaderSupervisor ! Reload
 
   /**
     * Get current config (from the last reload)
     */
-  def current(): Future[Config] = (ConfigReloaderSelection ? GetCurrentConfig) (AskTimeout).mapTo[Config]
+  def current(): Future[Config] = (configReloaderSupervisor ? GetCurrentConfig) (askTimeout).mapTo[Config]
 
   def getAnyRefList(path: String): Future[List[_]] = current().map(_.getAnyRefList(path).asScala.toList)
 
@@ -88,7 +80,8 @@ trait ReactiveConfig extends InitialConfig {
 
   def getConfigList(path: String): Future[List[Config]] = current().map(_.getConfigList(path).asScala.toList)
 
-  def getEnumList[T <: Enum[T]](enumClass: Class[T], path: String): Future[List[T]] = current().map(_.getEnumList(enumClass, path).asScala.toList)
+  def getEnumList[T <: Enum[T]](enumClass: Class[T], path: String): Future[List[T]] =
+    current().map(_.getEnumList(enumClass, path).asScala.toList)
 
   def getIsNull(path: String): Future[Boolean] = current().map(_.getIsNull(path))
 
@@ -160,7 +153,8 @@ trait ReactiveConfig extends InitialConfig {
 
   def resolve(options: ConfigResolveOptions): Future[Config] = current().map(_.resolve(options))
 
-  def getDurationList(path: String, unit: TimeUnit): Future[List[Long]] = current().map(_.getDurationList(path, unit).asScala.map(_.toLong).toList)
+  def getDurationList(path: String, unit: TimeUnit): Future[List[Long]] =
+    current().map(_.getDurationList(path, unit).asScala.map(_.toLong).toList)
 
   def getDurationList(path: String): Future[List[Duration]] = current().map(_.getDurationList(path).asScala.map(_.asScala).toList)
 
@@ -174,5 +168,4 @@ trait ReactiveConfig extends InitialConfig {
 
   def getString(path: String): Future[String] = current().map(_.getString(path))
 }
-
-// scalastyle:on
+// scalastyle:on number.of.methods

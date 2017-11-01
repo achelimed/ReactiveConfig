@@ -17,14 +17,14 @@ class ConfigReloaderSupervisor extends Actor with ActorLogging {
   // Defining children
   val configReloader: ActorRef = context.actorOf(ConfigReloader.props, "config-reloader")
 
-  // Defining the supervision strategy for the stopwatch actor
+  // Defining the supervision strategy for the configReloader actor
   override val supervisorStrategy: OneForOneStrategy = OneForOneStrategy(
     maxNrOfRetries = MaxNrOfRetries,
     withinTimeRange = WithinTimeRange) {
     case ex: Throwable =>
-      log.debug("ReactiveConf actor encountered an exception : ", ex.getStackTrace)
+      log.debug("ConfigReloader actor encountered an exception : ", ex.getStackTrace)
       log.error(
-        """ReactiveConf actor encountered an exception which is '{}'.
+        """ConfigReloader actor encountered an exception which is '{}'.
           |=> So restarting the actor.""".stripMargin, ex.getMessage)
       Restart
   }
@@ -35,6 +35,9 @@ class ConfigReloaderSupervisor extends Actor with ActorLogging {
 }
 
 object ConfigReloaderSupervisor extends InitialConfig {
+  // Name
+  val name: String = "config-reloader-supervisor"
+
   // Props
   def props: Props = Props[ConfigReloaderSupervisor]
 

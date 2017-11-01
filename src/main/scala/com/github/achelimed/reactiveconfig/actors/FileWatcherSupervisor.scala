@@ -12,24 +12,26 @@ import scala.language.postfixOps
 /**
   * File-Watcher actor
   */
-class FileWatcherSupervisor extends Actor with ActorLogging {
+class FileWatcherSupervisor(subscriber: ActorRef) extends Actor with ActorLogging {
 
   import FileWatcherSupervisor._
 
-  val fileWatcher: ActorRef = context.actorOf(FileWatcher.props, "file-watcher")
+  // Defining children
+  val fileWatcher: ActorRef = context.actorOf(FileWatcher.props(subscriber), "file-watcher")
 
+  // Defining the supervision strategy for the fileWatcher actor
   override val supervisorStrategy: OneForOneStrategy = OneForOneStrategy(
-  maxNrOfRetries = MaxNrOfRetries,
-  withinTimeRange = WithinTimeRange) {
+    maxNrOfRetries = MaxNrOfRetries,
+    withinTimeRange = WithinTimeRange) {
     case nsfe: NoSuchFileException =>
       log.warning(
-      """FileWatcher actor does not found the file to watch: '{}'.
+        """FileWatcher actor does not found the file to watch: '{}'.
           |=> Please, supply a valid file path.
         """.stripMargin, nsfe.getMessage)
       Restart
     case ex: Throwable =>
       log.error(
-      """FileWatcher actor encountered an exception which is '{}'.
+        """FileWatcher actor encountered an exception which is '{}'.
           |=> The FileWatcher will be stopped.""".stripMargin, ex.getMessage)
       Stop
   }
@@ -43,8 +45,11 @@ object FileWatcherSupervisor extends InitialConfig {
 
   import com.github.achelimed.reactiveconfig.implicits.JavaConversions._
 
+  // Name
+  val name: String = "file-watcher-supervisor"
+
   // Props
-  def props = Props[FileWatcherSupervisor]
+  def props(subscriber: ActorRef) = Props(new FileWatcherSupervisor(subscriber))
 
   // Constants for strategy
   val MaxNrOfRetries: Int =
