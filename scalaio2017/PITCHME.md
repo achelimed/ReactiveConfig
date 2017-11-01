@@ -1,6 +1,6 @@
----?image=assets/scalaio-intro.jpg
+---?image=assets/images/scalaio-intro.png
 
----?image=assets/scalaio-sponsors.jpg
+---?image=assets/images/scalaio-sponsors.jpg
 
 ---
 #### Typesafe Config
@@ -48,7 +48,7 @@ Si le fichier de configuration est modifié -> Une configuration fraîche est ch
 
 ---
 
-![ReactiveConfig](assets/reactive-config-architecture.png)
+![ReactiveConfig](assets/images/reactive-config-architecture.png)
 
 ---?code=src/main/scala/com/github/achelimed/reactiveconfig/actors/FileWatcher.scala
 @[12](FileWatcher actor definition)
@@ -164,7 +164,7 @@ and you have to touch this file.
 - Tests! lol
 - Java compatibility
 - Json rendering
-- REST api -> apply the `reactiveConfig.reload()` method
+- REST api : apply the `reactiveConfig.reload()` method, ...
 
 ---
 
@@ -172,7 +172,7 @@ _Your question is a **`val (not null)`**..._
 
 _My response is a **`var (nullable)`**_ 
 
----?image=assets/scalaio-thanks.jpg
+---?image=assets/images/scalaio-thanks.jpg
 
 
 

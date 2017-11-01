@@ -1,5 +1,5 @@
 gatoken : UA-109096279-1
-logo : assets/scalaio-logo.png
+logo : assets/images/scalaio-logo.png
 theme : sky
-theme-override : PITCHME.css
+theme-override : assets/css/custom.css
 footnote : "ScalaIO 2017. Lyon, France."
