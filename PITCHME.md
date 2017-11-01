@@ -1,8 +1,6 @@
-**Reactive Config**
+--->image=assets/scalaio-intro.jpg
 
-Scala.io 2017
-
-@achelimed
+--->image=assets/scalaio-sponsors.jpg
 
 ---
 **Typesafe**
@@ -76,6 +74,8 @@ class Foo(reactiveConfig: ReactiveConfig)(implicit executionContext: ExecutionCo
 @[25-37]
 
 +++?code=src/main/scala/com/github/achelimed/reactiveconfig/actors/ConfigReloader.scala
+
+--->image=assets/scalaio-thanks.jpg
 
 
 

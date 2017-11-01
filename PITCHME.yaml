@@ -1,6 +1,4 @@
-logo : scalaio-sponsors.png
-logo-position : bottom-left
-
+# logo : scalaio-sponsors.png
+# logo-position : bottom-left
 background-size : auto
-
 theme-override : PITCHME.css
