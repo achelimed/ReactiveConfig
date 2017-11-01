@@ -3,16 +3,16 @@
 ---?image=assets/scalaio-sponsors.jpg
 
 ---
-**Typesafe**
+# Typesafe Config
 
 A type-safe configuration library for JVM languages.
 
 Standard behavior load:
-- system properties
-- application.conf
-- application.json
-- application.properties
-- reference.conf
+1. system properties
+1. application.conf
+1. application.json
+1. application.properties
+1. reference.conf
 
 Note:
 - Qui a déjà utilisé Typesafe Config ?
@@ -22,7 +22,7 @@ Note:
 
 +++
 
-**Pros**
+# Pros
 - supports files in three formats: Java properties, JSON, and a human-friendly JSON superset (called HOCON)
 - merges multiple files across all formats
 - can load from files, URLs, or classpath
@@ -33,13 +33,13 @@ Note:
 - Files use the suffix .conf
 +++ 
 
-**Cons**
+# Cons
 - config not hot reloadable
 - Java types (for Scala projects)
 - maybe others
 
 ---
-**Reactive Config**
+# Reactive Config
 - A Reactive Wrapper over the Typesafe Config library that allows to get the latest refreshed configuration. 
 - This library takes advantage of reactive solutions such as Akka actor. 
 
@@ -50,8 +50,18 @@ Si le fichier de configuration est modifié -> Une configuration fraîche est ch
 
 ![ReactiveConfig](reactive-config.png)
 
+---?code=src/main/scala/com/github/achelimed/reactiveconfig/actors/FileWatcher.scala
+@[12](actor definition)
+@[21](state)
+@[23-35](behavior)
+
++++?code=src/main/scala/com/github/achelimed/reactiveconfig/actors/ConfigReloader.scala
+@[9](actor definition)
+@[13](state)
+@[20-32](behavior)
+
 ---
-**sbt dependencies**
+# sbt dependencies
 
 ```
 libraryDependencies += "com.github.achelimed" %% "reactive-config" % "1.0.0"
@@ -68,12 +78,9 @@ class Foo(reactiveConfig: ReactiveConfig)(implicit executionContext: ExecutionCo
 }
 ```
 
----?code=src/main/scala/com/github/achelimed/reactiveconfig/actors/FileWatcher.scala
-@[12](file watcher actor definition)
-@[16-23]
-@[25-37]
-
-+++?code=src/main/scala/com/github/achelimed/reactiveconfig/actors/ConfigReloader.scala
+---
+> Your question is a `val`... My response is a `var`.
+> - Me. 2017
 
 ---?image=assets/scalaio-thanks.jpg
 
