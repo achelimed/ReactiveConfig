@@ -1,6 +1,7 @@
 # logo : scalaio-sponsors.png
 # logo-position : bottom-left
 # background-size : auto
+logo : assets/scalaio-logo.png
 theme : sky
 theme-override : PITCHME.css
 footnote : "ScalaIO 2017. Lyon, France."
