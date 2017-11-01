@@ -60,7 +60,7 @@ Si le fichier de configuration est modifié -> Une configuration fraîche est ch
 @[13](ConfigReloader state)
 @[20-32](ConfigReloader behavior)
 
----?code=src/main/scala/com/github/achelimed/reactiveconfig/ReactiveConfig.scala
+---?code=src/main/scala/com/github/achelimed/reactiveconfig/ReactiveConfig.scala?lang=scala
 @[20](Initial Config when starting (can not be changed))
 @[22](Initial config)
 @[36](The Reactive Config interface that wrap Typesafe Config)
@@ -125,7 +125,7 @@ class AsyncController @Inject()(cc: ControllerComponents,
 ```
 ---
 #### OPS
-###### Alternatives to default `application.conf`
+**Alternatives to default `application.conf`**
 
 If you want to reload the config from another file, use system properties (as allowed by the Typesafe Config library):
 
@@ -139,7 +139,7 @@ or
 
 +++
 #### OPS
-###### Config for `ReactiveConfig`
+**Config for `ReactiveConfig`**
 
 application.conf:
 ```properties
@@ -157,10 +157,11 @@ and you have to touch this file or apply the `reactiveConfig.reload()` method.
 
 ---
 #### Upcoming Features
-- [ ] Tests! lol
-- [ ] Java compatibility
-- [ ] Json rendering
-- [ ] REST api
+
+- Tests! lol
+- Java compatibility
+- Json rendering
+- REST api
 
 ---
 
