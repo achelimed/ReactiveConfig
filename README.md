@@ -2,10 +2,10 @@ A Reactive Wrapper over the [Typesafe Config library](https://github.com/typesaf
 automatically without having to restart the application. This library takes advantage of reactive solutions such as Akka actor.
 
 ### Typesafe Config Workflow
-![tsc-workflow](tsc-workflow.png)
+![tsc-workflow](assets/tsc-workflow.png)
 
 ### Reactive Config Architecture
-![reactive-config](assets/reactive-config.png)
+![reactive-config](assets/reactive-config-architecture.png)
 
 ### Binary Releases
 

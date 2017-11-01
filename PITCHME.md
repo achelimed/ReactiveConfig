@@ -1,4 +1,4 @@
----?image=assets/scalaio-intro.png
+---?image=assets/scalaio-intro.jpg
 
 ---?image=assets/scalaio-sponsors.jpg
 
@@ -26,11 +26,11 @@ Note:
 - supports files in three formats: Java properties, JSON, and a human-friendly JSON superset (called HOCON)
 - merges multiple files across all formats
 - can load from files, URLs, or classpath
-- users can override the config with Java system properties, java -Dmyapp.foo.bar=10
+- users can override the config with Java system properties, java `-Dmyapp.foo.bar=10
 
 Note:
 - HOCON = Human-Optimized Config Object Notation
-- Files use the suffix .conf
+- Files use the suffix `.conf
 +++ 
 
 #### Cons
@@ -60,11 +60,9 @@ Si le fichier de configuration est modifié -> Une configuration fraîche est ch
 @[13](ConfigReloader state)
 @[20-32](ConfigReloader behavior)
 
----?code=src/main/scala/com/github/achelimed/reactiveconfig/ReactiveConfig.scala?lang=scala
-@[20](Initial Config when starting (can not be changed))
-@[22](Initial config)
-@[36](The Reactive Config interface that wrap Typesafe Config)
-@[43](Supplying an execution context)
+---?code=src/main/scala/com/github/achelimed/reactiveconfig/ReactiveConfig.scala
+@[20-22](Initial Config when starting (can not be changed))
+@[36-43](The Reactive Config interface that wrap Typesafe Config - Supply it an execution context)
 @[46-49](Actor system)
 @[52-53](Create 2 supervisors, one for each actor)
 @[56-58](Schedules to send the "Check" message to the FileWatcher)
@@ -73,13 +71,13 @@ Si le fichier de configuration est modifié -> Une configuration fraîche est ch
 
 ---
 #### Devs
-###### How to get it?
+**How to get it?**
 
 ```
 libraryDependencies += "com.github.achelimed" %% "reactive-config" % "1.0.0"
 ```
 
-###### How to use it?
+**How to use it?**
 ```
 class Foo(reactiveConfig: ReactiveConfig)(implicit executionContext: ExecutionContext) {
 
@@ -91,7 +89,7 @@ class Foo(reactiveConfig: ReactiveConfig)(implicit executionContext: ExecutionCo
 }
 ```
 +++
-###### Static values?
+**Static values?**
 
 If you are constrained to deal without Futures, You can get the values from the initial config loaded when the application first started
 
@@ -101,7 +99,7 @@ If you are constrained to deal without Futures, You can get the values from the 
 
 +++
 
-###### With Playframework?
+**With Playframework?**
 
 ```
 @Singleton
@@ -132,7 +130,9 @@ If you want to reload the config from another file, use system properties (as al
 ```bash
     -Dconfig.resource="another-file"
 ```
+
 or
+
 ```bash
     -Dconfig.file="whatever/you/want/another-file.conf"
 ```
@@ -142,18 +142,21 @@ or
 **Config for `ReactiveConfig`**
 
 application.conf:
-```properties
+
+```
 reactive-config {
     file-watcher {
         path = "whatever/you/want/watch.me"
     }
 }
 ```
+
 or
+
 ```bash
     -Dreactive-config.file-watcher.path="whatever/you/want/watch.me"
 ```
-and you have to touch this file or apply the `reactiveConfig.reload()` method.
+and you have to touch this file.
 
 ---
 #### Upcoming Features
@@ -161,11 +164,12 @@ and you have to touch this file or apply the `reactiveConfig.reload()` method.
 - Tests! lol
 - Java compatibility
 - Json rendering
-- REST api
+- REST api -> apply the `reactiveConfig.reload()` method
 
 ---
 
 _Your question is a **`val (not null)`**..._
+
 _My response is a **`var (nullable)`**_ 
 
 ---?image=assets/scalaio-thanks.jpg
